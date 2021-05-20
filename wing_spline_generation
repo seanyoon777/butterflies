@@ -1,0 +1,134 @@
+Needs["Splines`"];
+SeedRandom[1];
+w = 1000;
+h = 1000;
+index = Table[10 + 11 i, {i, 1, 5}];
+indexLower = Table[10 + 23 i, {i, 1, 5}];
+upperAngles = 
+  Table[RandomInteger[{index[[i]] - 6, index[[i]]}], {i, 1, 5}];
+lowerAngles = 
+  Table[RandomInteger[{indexLower[[i]] - 6, indexLower[[i]]}], {i, 1, 5}];
+
+upperRadiiHigh = RandomInteger[{0.4 w, 0.3 w}, 5]; // Quiet
+upperRadiiLow = RandomInteger[{0.01 w, 0.2 w}, 5]; // Quiet
+lowerRadiiHigh = RandomInteger[{0.1 w, 0.4 w}, 5]; // Quiet
+lowerRadiiLow = RandomInteger[{0.05 w, 0.2 w}, 5]; // Quiet
+
+x = Table[
+    RandomInteger[{0, 0.01 w}, Length[upperAngles]], {k, 1, 10}]; // Quiet
+y = Table[
+    RandomInteger[{0, 0.01 h}, Length[upperAngles]], {k, 1, 10}]; // Quiet
+r = Table[
+    RandomInteger[{0.25 w, 0.4 w}, Length[upperAngles]], {k, 1, 10}]; // Quiet
+a = Table[
+    Pi/180 Table[
+      RandomInteger[{upperAngles[[i]], upperAngles[[i]] - 7}], {i, 1, 
+       Length[upperAngles]}], {k, 1, 10}]; // Quiet
+phase = Table[(Pi RandomInteger[{0, 128}])/64, {k, 1, 10}]; // Quiet
+xMore = Table[
+    RandomInteger[{0, 0.01 w}, Length[upperAngles]], {k, 11, 20}]; // Quiet
+yMore = Table[
+    RandomInteger[{0, 0.01 h}, Length[upperAngles]], {k, 11, 20}]; // Quiet
+rMore = Table[
+    RandomInteger[{0.1 w, 0.2 w}, Length[upperAngles]], {k, 11, 20}]; // Quiet
+aMore = Table[
+    Pi/180 Table[
+      RandomInteger[{upperAngles[[i]], upperAngles[[i]] - 7}], {i, 1, Length[upperAngles]}], {k, 11, 20}]; // Quiet
+phaseMore = Table[(Pi RandomInteger[{0, 128}])/64, {k, 11, 20}]; // Quiet
+step = 32;
+frames = 30;
+x = Join[x, xMore];
+y = Join[y, yMore];
+a = Join[a, aMore];
+phase = Join[phase, phaseMore];
+r = Join[r, rMore];
+rNew = Table[r[[i]] + 15 Sin[(frames Pi)/step + phase[[i]]], {i, 1, 20}];
+xCart = Table[x[[i]] + rNew[[i]] Cos[a[[i]]], {i, 1, 20}]/100;
+yCart = Table[y[[i]] + rNew[[i]] Sin[a[[i]]], {i, 1, 20}]/100;
+points = Table[
+   Prepend[Append[
+     Table[{xCart[[j]][[i]], yCart[[j]][[i]]}, {i, 1, 5}], {0, 
+      0}], {0, 0}], {j, 1, 20}];
+
+xLow = Table[
+    RandomInteger[{0, 0.01 w}, Length[lowerAngles]], {k, 1, 13}]; // Quiet
+yLow = Table[
+    RandomInteger[{0, 0.01 h}, Length[lowerAngles]], {k, 1, 13}]; // Quiet
+rLow = Table[
+    RandomInteger[{0.25 w, 0.4 w}, Length[lowerAngles]], {k, 1, 13}]; // Quiet
+aLow = Table[
+    Pi/180 Table[
+      RandomInteger[{lowerAngles[[i]], lowerAngles[[i]] - 7}], {i, 1, 
+       Length[lowerAngles]}], {k, 1, 13}]; // Quiet
+phaseLow = Table[(Pi RandomInteger[{0, 128}])/64, {k, 1, 13}]; // Quiet
+xMoreLow = 
+   Table[RandomInteger[{0, 0.01 w}, Length[lowerAngles]], {k, 14, 
+     26}]; // Quiet
+yMoreLow = 
+   Table[RandomInteger[{0, 0.01 h}, Length[lowerAngles]], {k, 14, 
+     26}]; // Quiet
+rMoreLow = 
+   Table[RandomInteger[{0.1 w, 0.2 w}, Length[lowerAngles]], {k, 14, 
+     26}]; // Quiet
+aMoreLow = 
+   Table[Pi/180 Table[
+      RandomInteger[{lowerAngles[[i]], lowerAngles[[i]] - 7}], {i, 1, 
+       Length[lowerAngles]}], {k, 14, 26}]; // Quiet
+phaseMoreLow = 
+   Table[(Pi RandomInteger[{0, 128}])/64, {k, 14, 26}]; // Quiet
+xLow = Join[xLow, xMoreLow];
+yLow = Join[yLow, yMoreLow];
+aLow = Join[aLow, aMoreLow];
+phaseLow = Join[phaseLow, phaseMoreLow];
+rLow = Join[rLow, rMoreLow];
+rNewLow = 
+  Table[rLow[[i]] + 11 Sin[(frames Pi)/step + phaseLow[[i]]], {i, 1, 
+    26}];
+xCartLow = 
+  Table[xLow[[i]] + rNewLow[[i]] Cos[aLow[[i]]], {i, 1, 26}]/150;
+yCartLow = 
+  Table[yLow[[i]] + rNewLow[[i]] Sin[aLow[[i]]], {i, 1, 26}]/150;
+pointsLow = 
+  Table[Prepend[
+    Append[Table[{xCartLow[[j]][[i]], yCartLow[[j]][[i]]}, {i, 1, 
+       5}], {0, 0}], {0, 0}], {j, 1, 26}];
+fLow = Table[
+   BSplineFunction[pointsLow[[i]], SplineDegree -> 3], {i, 1, 26}];
+theta = Pi + 2.85 Pi/7;
+
+pointslow = 
+  Table[Table[{{Cos[theta], -Sin[theta]}, {Sin[theta], 
+       Cos[theta]}}.pointsLow[[j]][[i]], {i, 1, 7}], {j, 1, 26}];
+pointslowOppU = 
+  Table[Table[{{-1, 0}, {0, 1}}.points[[i]][[j]], {j, 1, 7}], {i, 1, 
+    19}];
+pointslowOppB = 
+  Table[Table[{{-1, 0}, {0, 1}}.pointslow[[i]][[j]], {j, 1, 7}], {i, 
+    1, 26}];
+
+
+Show[Graphics[{Red, PointSize[0.01], 
+   Table[Point[points[[i]]], {i, 1, 1}], Black, 
+   Table[Spline[points[[i]], Cubic], {i, 1, 1}],
+   
+   
+   Red, Table[Point[points[[i]]], {i, 1, 6}],
+   Red, Table[Point[points[[i]]], {i, 10, 12}],
+   Red, Table[Point[pointslow[[i]]], {i, 1, 6}],
+   Red, Table[Point[pointslow[[i]]], {i, 13, 17}],
+   Red, Table[Point[pointslowOppU[[i]]], {i, 1, 6}],
+   Red, Table[Point[pointslowOppU[[i]]], {i, 10, 12}],
+   Red, Table[Point[pointslowOppB[[i]]], {i, 1, 6}],
+   Red, Table[Point[pointslowOppB[[i]]], {i, 13, 17}],
+   
+   Black, Table[Spline[points[[i]], Cubic], {i, 1, 6}],
+   Black, Table[Spline[points[[i]], Cubic], {i, 10, 12}],
+   Black, Table[Spline[pointslow[[i]], Cubic], {i, 1, 6}],
+   Black, Table[Spline[pointslow[[i]], Cubic], {i, 13, 17}],
+   
+   Black, Table[Spline[pointslowOppU[[i]], Cubic], {i, 1, 6}],
+   Black, Table[Spline[pointslowOppU[[i]], Cubic], {i, 10, 12}],
+   Black, Table[Spline[pointslowOppB[[i]], Cubic], {i, 1, 6}],
+   Black, Table[Spline[pointslowOppB[[i]], Cubic], {i, 13, 17}]
+   }, Axes -> True], ImageSize -> {420, 420}, AxesLabel -> {"x", "y"}
+ ]
