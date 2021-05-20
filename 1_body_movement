@@ -1,0 +1,60 @@
+Rpath = RotationMatrix[-(Pi/6), {0, 1, 0}].RotationMatrix[Pi/
+    9, {0, 0, 1}];
+T = 4.5;
+pathLinear[t_] := (Rpath.{10, 0, 0} t);
+origin = {0, 0, 0};
+pathFinal = pathLinear[t] /. Solve[pathLinear[t][[1]] == 10, t][[1]];
+v = Norm[pathFinal]/T;
+wavelen = Norm[pathFinal]/3;
+p[t_] := pathFinal - 
+   Rpath.{v t, 0.3 Sin[(2 Pi v t)/wavelen], 
+     0};(*path function*)
+\[CapitalOmega][t_] := 
+  Pi/9 Sin[-((2 Pi v t)/wavelen)] + Pi/
+   6;(*Spine planar angle function*)
+
+head\[Omega][t_] := 
+  Pi/12 Sin[(2 Pi v t)/wavelen] - Pi/
+   36;(*head ellipsoid planar angle function*)
+
+body\[Omega][t_] := 
+  Pi/12 Sin[(2 Pi v t)/wavelen] - Pi/
+   36;(*body ellipsoid planar angle function*)
+Manipulate[Show[
+  ParametricPlot3D[
+   pathFinal - Rpath.{v r, 0.3 Sin[(2 Pi v r)/wavelen], 0}, {r, 0, T},
+    PlotRange -> {{12, -5}, {12, -5}, {12, -5}}, 
+   AxesLabel -> {"x", "y", "z"}, AxesOrigin -> {0, 0, 0}, 
+   Boxed -> False, AspectRatio -> 1, 
+   ViewPoint -> {1.3899979700897551`, 1.6244361669603617`, 
+     2.6228062800400425`}, 
+   ViewVertical -> {0.08393214883158497`, 0.9909995258615256`, 
+     0.10428487011424135`}],
+  (*ParametricPlot3D[RotationMatrix[-(Pi/6),{0,1,0}].{r,0,s},{r,-3,
+  3},{s,-3,3},PlotStyle\[Rule]{Opacity[0.2]}],*)
+  
+  ParametricPlot3D[
+   RotationMatrix[-(Pi/6), {0, 1, 
+       0}].RotationMatrix[-\[CapitalOmega][t], {0, 0, 1}].{r, 0, s} + 
+    p[t], {r, -1, 1}, {s, -1, 1}, Mesh -> False, 
+   PlotStyle -> {Blue, Opacity[0.2]}],
+  ParametricPlot3D[(*RotationMatrix[-head\[Omega][t],{0,0,1}].*)
+   RotationMatrix[-\[CapitalOmega][t], {0, 0, 
+       1}].({0.3 Sin[\[CurlyTheta]] Cos[\[CurlyPhi]], 
+        0.1 Sin[\[CurlyTheta]] Sin[\[CurlyPhi]], 
+        0.1 Cos[\[CurlyTheta]]} - {0.3, 0, 0}) + p[t], {\[CurlyTheta],
+     0, 2 Pi}, {\[CurlyPhi], 0, 2 Pi}, Mesh -> False, 
+   PlotStyle -> Opacity[0.5]],
+  ParametricPlot3D[(*RotationMatrix[body\[Omega][t],{0,0,1}].*)
+   RotationMatrix[-\[CapitalOmega][t] + Pi, {0, 0, 
+       1}].({0.65 Sin[\[CurlyTheta]] Cos[\[CurlyPhi]], 
+        0.12 Sin[\[CurlyTheta]] Sin[\[CurlyPhi]], 
+        0.12 Cos[\[CurlyTheta]]} - {0.65, 0, 0}) + 
+    p[t], {\[CurlyTheta], 0, 2 Pi}, {\[CurlyPhi], 0, 2 Pi}, 
+   Mesh -> False, PlotStyle -> Opacity[0.5]],
+  Graphics3D[{
+    Green, Thickness[0.005], Line[{origin, pathFinal}],
+    Red, Sphere[p[t], 0.10]
+    }],
+  ImageSize -> {720, 720}
+  ], {t, 0, 4.5, 0.1}]
