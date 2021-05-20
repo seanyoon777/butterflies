@@ -1,0 +1,78 @@
+ImageResize[
+ Show[Table[
+   RemoveBackground[
+    SetAlphaChannel[ColorReplace[Binarize[ColorNegate[FillingTransform[
+         
+         
+         Show[
+          
+          ParametricPlot[
+           Evaluate[SplineFit[points[[i]], Cubic][t]], {t, 0, 20}, 
+           AxesLabel -> {"x", "y", "z"}, AxesOrigin -> {0, 0, 0}, 
+           Background -> Black, Axes -> False, 
+           PlotRange -> {{-4, 4}, {-4, 4}}],
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslowOppU[[i]], Cubic][t]], {t, 0, 
+            20}, AxesLabel -> {"x", "y", "z"}, 
+           AxesOrigin -> {0, 0, 0}, Background -> Black, Axes -> False]
+          ]]]], 
+      Black -> ColorData["CMYKColors"][RandomReal[{0, 0.3}]]], 
+     0.1]], {i, 1, 6}],
+  
+  Table[RemoveBackground[
+    SetAlphaChannel[ColorReplace[Binarize[ColorNegate[FillingTransform[
+         
+         
+         Show[
+          
+          ParametricPlot[
+           Evaluate[SplineFit[points[[i]], Cubic][t]], {t, 0, 20}, 
+           AxesLabel -> {"x", "y", "z"}, AxesOrigin -> {0, 0, 0}, 
+           Background -> Black, Axes -> False, 
+           PlotRange -> {{-4, 4}, {-4, 4}}],
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslowOppU[[i]], Cubic][t]], {t, 0, 
+            20}, AxesLabel -> {"x", "y", "z"}, 
+           AxesOrigin -> {0, 0, 0}, Background -> Black, Axes -> False]
+          ]]]], 
+      Black -> ColorData["CMYKColors"][RandomReal[{0, 0.3}]]], 
+     0.1]], {i, 10, 12}],
+  
+  Table[RemoveBackground[
+    SetAlphaChannel[ColorReplace[Binarize[ColorNegate[FillingTransform[
+         Show[
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslow[[i]], Cubic][t]], {t, 0, 20}, 
+           AxesLabel -> {"x", "y", "z"}, AxesOrigin -> {0, 0, 0}, 
+           Background -> Black, Axes -> False, 
+           PlotRange -> {{-4, 4}, {-4, 4}}],
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslowOppB[[i]], Cubic][t]], {t, 0, 
+            20}, AxesLabel -> {"x", "y", "z"}, 
+           AxesOrigin -> {0, 0, 0}, Background -> Black, Axes -> False]
+          ]]]], 
+      Black -> ColorData["CMYKColors"][RandomReal[{0.3, 0.5}]]], 
+     0.1]], {i, 1, 6}],
+  
+  Table[RemoveBackground[
+    SetAlphaChannel[ColorReplace[Binarize[ColorNegate[FillingTransform[
+         Show[
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslow[[i]], Cubic][t]], {t, 0, 20}, 
+           AxesLabel -> {"x", "y", "z"}, AxesOrigin -> {0, 0, 0}, 
+           Background -> Black, Axes -> False, 
+           PlotRange -> {{-4, 4}, {-4, 4}}],
+          
+          ParametricPlot[
+           Evaluate[SplineFit[pointslowOppB[[i]], Cubic][t]], {t, 0, 
+            20}, AxesLabel -> {"x", "y", "z"}, 
+           AxesOrigin -> {0, 0, 0}, Background -> Black, Axes -> False]
+          ]]]], 
+      Black -> ColorData["CMYKColors"][RandomReal[{0.5, 0.7}]]], 
+     0.1]], {i, 13, 15}]
+  ], 3000]
